@@ -11,6 +11,7 @@ class PostTableSeeder extends Seeder
      */
     public function run()
     {
+        /*
         $post = new \App\Post([
             'title' => 'Learning Laravel',
             'content' => 'This blog post will get you right on track with Laravel!'
@@ -22,5 +23,6 @@ class PostTableSeeder extends Seeder
             'content' => 'Some other content'
         ]);
         $post->save();
+        */
     }
 }

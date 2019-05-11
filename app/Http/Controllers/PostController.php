@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Like;
 use App\Post;
 use App\Tag;
+use Auth;
+use Gate;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -58,7 +60,7 @@ class PostController extends Controller
             'title' => $request->input('title'),
             'content' => $request->input('content')
         ]);
-        $post->save();
+        Auth::user()->posts()->save($post);
         $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
 
         return redirect()->route('admin.index')->with('info', 'Post created, Title is: ' . $request->input('title'));
@@ -73,7 +75,9 @@ class PostController extends Controller
         $post = Post::find($request->input('id'));
         $post->title = $request->input('title');
         $post->content = $request->input('content');
-        $post->save();
+        if (Gate::denies('update -post ', $post)) { return redirect()->back(); }
+
+        Auth::user()->posts()->save($post);
 //        $post->tags()->detach();
 //        $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
         $post->tags()->sync($request->input('tags') === null ? [] : $request->input('tags'));
